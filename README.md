@@ -1,4 +1,4 @@
-visual_inertial_odometry_fusion
+odometry_fusion
 =============
 Fusion of inertial and visual odometry
 

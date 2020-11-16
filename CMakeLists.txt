@@ -1,7 +1,7 @@
 # CMakeLists.txt has to be located in the project folder and cmake has to be
 # executed from 'project/build' with 'cmake ../'.
 cmake_minimum_required(VERSION 3.9)
-project(visual_inertial_odometry_fusion
+project(odometry_fusion
         VERSION 0.1
         DESCRIPTION "Fusion of inertial and visual odometry")
 find_package(Rock)
