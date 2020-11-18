@@ -5,4 +5,5 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 rock_library(odometry_fusion
     SOURCES OdometryFusion.cpp
-    HEADERS OdometryFusion.hpp)
+    HEADERS OdometryFusion.hpp
+    DEPS_PKGCONFIG base-types)
