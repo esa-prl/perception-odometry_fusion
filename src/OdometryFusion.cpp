@@ -278,3 +278,17 @@ void OdometryFusion::test()
     cout << "You successfully compiled and executed OdometryFusion. Welcome!" << endl;
     cout << x.format(singleLine) << endl;
 }
+
+Vector3d OdometryFusion::quat2eul(Quaterniond q)
+{
+    Vector3d eul;
+    double t2 = q.w() * q.w();
+    double t3 = q.x() * q.x();
+    double t4 = q.y() * q.y();
+    double t5 = q.z() * q.z();
+    double t6 = -t4;
+    eul << atan2(q.w() * q.z() * 2.0 + q.x() * q.y() * 2.0, t2 + t3 - t5 + t6),
+        asin(q.w() * q.y() * 2.0 - q.x() * q.z() * 2.0),
+        atan2(q.w() * q.x() * 2.0 + q.y() * q.z() * 2.0, t2 - t3 + t5 + t6);
+    return eul;
+}

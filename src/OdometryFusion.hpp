@@ -54,6 +54,7 @@ class OdometryFusion
 
     void predict(base::Time t, const InputVector& u, const InputCovarianceMatrix& C);
     void update(base::Time t, const ObservationVector& z, const ObservationCovarianceMatrix& R);
+    static Eigen::Vector3d quat2eul(Eigen::Quaterniond q);
 };
 
 }  // end namespace odometry_fusion
