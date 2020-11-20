@@ -22,7 +22,18 @@ runge_kutta_dopri5<StateAndCovarianceMatrix,
 
 void OdometryFusion::integrate(base::Time t)
 {
+    if (current_time.isNull())
+    {
+        current_time = t;
+        return;
+    }
     double dt = (t - current_time).toSeconds();
+    assert(dt > 0);
+    if (dt == 0)
+    {
+        return;
+    }
+
     double integration_dt = 0.01;  // TODO: make configurable
     integrate_const(stepper, ode(this), xP, 0.0, dt, min(integration_dt, dt));
     current_time = t;
@@ -50,6 +61,8 @@ void OdometryFusion::update(base::Time t,
                             const ObservationVector& z,
                             const ObservationCovarianceMatrix& R)
 {
+    /** go to current time step **/
+    integrate(t);
 
     /** Get observation function and Jacobian **/
     ObservationVector h = observationFunction(xP.col(0));
