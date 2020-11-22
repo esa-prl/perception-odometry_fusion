@@ -22,10 +22,13 @@ class OdometryFusion
   protected:
     base::Time current_time;
 
+    // State vector and its covariance are stored together to make it easier to integrate
+    // x=xP.col(0)
+    // P=xP.rightCols(N)
     StateAndCovarianceMatrix xP = StateAndCovarianceMatrix::Zero();
 
     InputVector input = InputVector::Zero();
-    InputCovarianceMatrix input_covariance = InputCovarianceMatrix::Zero();
+    InputCovarianceMatrix input_covariance = InputCovarianceMatrix::Identity() * 1000;
 
     StateVector stateTransitionFunction(const StateVector& x, const InputVector& u);
     StateCovarianceMatrix stateTransitionJacobian(const StateVector& x, const InputVector& u);
@@ -54,6 +57,7 @@ class OdometryFusion
 
     void predict(base::Time t, const InputVector& u, const InputCovarianceMatrix& C);
     void update(base::Time t, const ObservationVector& z, const ObservationCovarianceMatrix& R);
+    void stochastic_cloning();
     static Eigen::Vector3d quat2eul(Eigen::Quaterniond q);
 };
 

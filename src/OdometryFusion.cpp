@@ -74,6 +74,16 @@ void OdometryFusion::update(base::Time t,
     auto K = xP.rightCols(N) * H.transpose() * S.inverse();
     xP.col(0) = xP.col(0) + K * y;
     xP.rightCols(N) = (StateCovarianceMatrix::Identity() - K * H) * xP.rightCols(N);
+
+    stochastic_cloning();
+}
+
+void OdometryFusion::stochastic_cloning()
+{
+    // copy rows of state into rows of clone (includes column where x is stored)
+    xP.block<N / 2, N + 1>(N / 2, 0) = xP.block<N / 2, N + 1>(0, 0);
+    // copy columns of state into columns of clone (only covariance)
+    xP.block<N, N / 2>(0, 1 + (N / 2)) = xP.block<N, N / 2>(0, 1);
 }
 
 StateVector OdometryFusion::stateTransitionFunction(const StateVector& x, const InputVector& u)
