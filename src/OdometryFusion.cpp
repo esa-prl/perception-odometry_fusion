@@ -1,6 +1,7 @@
 #include "OdometryFusion.hpp"
 
 #include <Eigen/Dense>
+#include <base-logging/Logging.hpp>
 #include <base/Time.hpp>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/algebra/vector_space_algebra.hpp>
@@ -20,23 +21,28 @@ runge_kutta_dopri5<StateAndCovarianceMatrix,
                    vector_space_algebra>
     stepper;
 
-void OdometryFusion::integrate(base::Time t)
+bool OdometryFusion::integrate(base::Time t)
 {
     if (current_time.isNull())
     {
         current_time = t;
-        return;
+        return true;
     }
     double dt = (t - current_time).toSeconds();
-    assert(dt > 0);
+    if (dt < 0)
+    {
+        LOG_WARN("[ODOMETRY_FUSION] Ignoring update that is from earlier than current_time")
+        return false;
+    }
     if (dt == 0)
     {
-        return;
+        return true;
     }
 
     double integration_dt = 0.01;  // TODO: make configurable
     integrate_const(stepper, ode(this), xP, 0.0, dt, min(integration_dt, dt));
     current_time = t;
+    return true;
 }
 
 void OdometryFusion::ode::operator()(const StateAndCovarianceMatrix& pair,

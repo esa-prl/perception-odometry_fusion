@@ -20,6 +20,7 @@ typedef Eigen::Matrix<double, N, N + 1> StateAndCovarianceMatrix;
 class OdometryFusion
 {
   protected:
+    base::Time initial_time;
     base::Time current_time;
 
     // State vector and its covariance are stored together to make it easier to integrate
@@ -36,7 +37,7 @@ class OdometryFusion
     ObservationVector observationFunction(const StateVector& x);
     ObservationJacobianMatrix observationJacobian(const StateVector& x);
 
-    void integrate(base::Time t);
+    bool integrate(base::Time t);
 
     struct ode
     {
