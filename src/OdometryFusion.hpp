@@ -3,7 +3,7 @@
 
 #include <Eigen/Dense>
 #include <base/Time.hpp>
-
+#include <odometry_fusion/Config.hpp>
 namespace odometry_fusion
 {
 const unsigned int N = 12;
@@ -20,6 +20,7 @@ typedef Eigen::Matrix<double, N, N + 1> StateAndCovarianceMatrix;
 class OdometryFusion
 {
   protected:
+    Config config;
     base::Time initial_time;
     base::Time current_time;
 
@@ -50,6 +51,8 @@ class OdometryFusion
     };
 
   public:
+    OdometryFusion(const Config& config = Config());
+
     void test();
 
     base::Time getCurrentTime() const { return current_time; }

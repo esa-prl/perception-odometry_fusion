@@ -21,6 +21,8 @@ runge_kutta_dopri5<StateAndCovarianceMatrix,
                    vector_space_algebra>
     stepper;
 
+OdometryFusion::OdometryFusion(const Config& config) : config(config) {}
+
 bool OdometryFusion::integrate(base::Time t)
 {
     if (current_time.isNull())
@@ -38,8 +40,7 @@ bool OdometryFusion::integrate(base::Time t)
         return true;
     }
 
-    double integration_dt = 0.01;  // TODO: make configurable
-    integrate_const(stepper, ode(this), xP, 0.0, dt, min(integration_dt, dt));
+    integrate_const(stepper, ode(this), xP, 0.0, dt, std::min(config.integration_dt, dt));
     current_time = t;
     return true;
 }
