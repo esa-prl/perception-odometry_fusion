@@ -31,8 +31,7 @@ bool OdometryFusion::integrate(base::Time t)
     double dt = (t - current_time).toSeconds();
     if (dt < 0)
     {
-        LOG_WARN("[ODOMETRY_FUSION] Ignoring update that is from earlier than current_time")
-        return false;
+        throw "Cannot integrate backwards, make sure the streams are correctly aligned";
     }
     if (dt == 0)
     {
