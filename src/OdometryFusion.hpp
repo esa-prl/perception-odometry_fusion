@@ -6,16 +6,22 @@
 #include <odometry_fusion/Config.hpp>
 namespace odometry_fusion
 {
-const unsigned int N = 12;
+const unsigned int N = 18;
 typedef Eigen::Matrix<double, N, 1> StateVector;
-typedef Eigen::Matrix<double, N / 2, 1> InputVector;
-typedef Eigen::Matrix<double, N / 2, N / 2> InputCovarianceMatrix;
-typedef Eigen::Matrix<double, N, N / 2> InputJacobianMatrix;
-typedef Eigen::Matrix<double, N / 2, 1> ObservationVector;
-typedef Eigen::Matrix<double, N / 2, N / 2> ObservationCovarianceMatrix;
-typedef Eigen::Matrix<double, N / 2, N> ObservationJacobianMatrix;
 typedef Eigen::Matrix<double, N, N> StateCovarianceMatrix;
 typedef Eigen::Matrix<double, N, N + 1> StateAndCovarianceMatrix;
+
+const unsigned int Nu = 6;
+typedef Eigen::Matrix<double, Nu, 1> InputVector;
+typedef Eigen::Matrix<double, Nu, Nu> InputCovarianceMatrix;
+typedef Eigen::Matrix<double, N, Nu> InputJacobianMatrix;
+
+const unsigned int No = 6;
+typedef Eigen::Matrix<double, No, 1> ObservationVector;
+typedef Eigen::Matrix<double, No, No> ObservationCovarianceMatrix;
+typedef Eigen::Matrix<double, No, N> ObservationJacobianMatrix;
+
+const unsigned int Nc=6;
 
 class OdometryFusion
 {
@@ -37,6 +43,8 @@ class OdometryFusion
     InputJacobianMatrix stateTransitionInputJacobian(const StateVector& x, const InputVector& u);
     ObservationVector observationFunction(const StateVector& x);
     ObservationJacobianMatrix observationJacobian(const StateVector& x);
+    ObservationVector observationFunction2(const StateVector& x);
+    ObservationJacobianMatrix observationJacobian2(const StateVector& x);
 
     bool integrate(base::Time t);
 
@@ -61,6 +69,7 @@ class OdometryFusion
 
     void predict(base::Time t, const InputVector& u, const InputCovarianceMatrix& C);
     void update(base::Time t, const ObservationVector& z, const ObservationCovarianceMatrix& R);
+    void update2(base::Time t, const ObservationVector& z, const ObservationCovarianceMatrix& R);
     void stochastic_cloning();
     static Eigen::Vector3d quat2eul(Eigen::Quaterniond q);
 };
