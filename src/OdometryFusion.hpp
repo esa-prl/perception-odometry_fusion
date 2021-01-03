@@ -8,14 +8,20 @@ namespace odometry_fusion
 {
 const unsigned int N = 12;
 typedef Eigen::Matrix<double, N, 1> StateVector;
-typedef Eigen::Matrix<double, N / 2, 1> InputVector;
-typedef Eigen::Matrix<double, N / 2, N / 2> InputCovarianceMatrix;
-typedef Eigen::Matrix<double, N, N / 2> InputJacobianMatrix;
-typedef Eigen::Matrix<double, N / 2, 1> ObservationVector;
-typedef Eigen::Matrix<double, N / 2, N / 2> ObservationCovarianceMatrix;
-typedef Eigen::Matrix<double, N / 2, N> ObservationJacobianMatrix;
 typedef Eigen::Matrix<double, N, N> StateCovarianceMatrix;
 typedef Eigen::Matrix<double, N, N + 1> StateAndCovarianceMatrix;
+
+const unsigned int Nu = 6;
+typedef Eigen::Matrix<double, Nu, 1> InputVector;
+typedef Eigen::Matrix<double, Nu, Nu> InputCovarianceMatrix;
+typedef Eigen::Matrix<double, N, Nu> InputJacobianMatrix;
+
+const unsigned int No = 6;
+typedef Eigen::Matrix<double, No, 1> ObservationVector;
+typedef Eigen::Matrix<double, No, No> ObservationCovarianceMatrix;
+typedef Eigen::Matrix<double, No, N> ObservationJacobianMatrix;
+
+const unsigned int Nc=6;
 
 class OdometryFusion
 {

@@ -87,10 +87,11 @@ void OdometryFusion::update(base::Time t,
 void OdometryFusion::stochastic_cloning()
 {
     // copy rows of state into rows of clone (includes column where x is stored)
-    xP.block<N / 2, N + 1>(N / 2, 0) = xP.block<N / 2, N + 1>(0, 0);
+    xP.block<Nc, N + 1>(N - Nc, 0) = xP.block<Nc, N + 1>(0, 0);
     // copy columns of state into columns of clone (only covariance)
-    xP.block<N, N / 2>(0, 1 + (N / 2)) = xP.block<N, N / 2>(0, 1);
+    xP.block<N, Nc>(0, N + 1 - Nc) = xP.block<N, Nc>(0, 1);
 }
+
 
 StateVector OdometryFusion::stateTransitionFunction(const StateVector& x, const InputVector& u)
 {
