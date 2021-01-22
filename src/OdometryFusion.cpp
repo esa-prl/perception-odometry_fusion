@@ -21,7 +21,9 @@ runge_kutta_dopri5<StateAndCovarianceMatrix,
                    vector_space_algebra>
     stepper;
 
-OdometryFusion::OdometryFusion(const Config &config) : config(config) {}
+OdometryFusion::OdometryFusion(const Config &config) : config(config)
+{
+}
 
 bool OdometryFusion::integrate(base::Time t)
 {
@@ -59,10 +61,12 @@ void OdometryFusion::ode::operator()(const StateAndCovarianceMatrix &pair,
 
 void OdometryFusion::predict(base::Time t, const InputVector &u, const InputCovarianceMatrix &C)
 {
-    input_covariance = InputCovarianceMatrix::Identity() * 1;
+    // input_covariance = InputCovarianceMatrix::Identity() * 1;
+    InputCovarianceMatrix Q = config.model_standard_deviation.asDiagonal();
+    input_covariance = Q.transpose().eval() * Q;
     input = InputVector::Zero();
+    update2(t, u, C);
     integrate(t);
-    update2(t,u,C);
 }
 void OdometryFusion::update(base::Time t,
                             const ObservationVector &z,
@@ -86,11 +90,11 @@ void OdometryFusion::update(base::Time t,
 }
 
 void OdometryFusion::update2(base::Time t,
-                            const ObservationVector &z,
-                            const ObservationCovarianceMatrix &R)
+                             const ObservationVector &z,
+                             const ObservationCovarianceMatrix &R)
 {
     /** go to current time step **/
-    integrate(t);
+    // integrate(t);
 
     /** Get observation function and Jacobian **/
     ObservationVector h = observationFunction2(xP.col(0));
